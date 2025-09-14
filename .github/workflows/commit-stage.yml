@@ -8,3 +8,27 @@ jobs :
     permissions:
       contents: read
       security-events: write
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with: 
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+      - name: Code Vulnerability scanning
+        uses: anchore/scan-action@v3
+        id: scan
+        with:
+          path: "${{ github.workspace }}"
+          fail-build: false
+          severity-cutoff: high
+          acs-report-eanble: true
+      - name: Upload vulnerability report
+        uses: github/codeql-action/upload-sari@v2
+        if: success() || failure()
+        with:
+          sarif_file: ${{ steps.sca,.outputs.sarif }}
+      - name: Build, unit tests and integration tests
+        run: chmod +x gradlew ./gradlew build
