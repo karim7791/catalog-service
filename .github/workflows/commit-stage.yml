@@ -1,6 +1,11 @@
 name: Commit stage
 on: push
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: karim7791/catalog-service
+  VERSION: latest
+
 jobs :
   build:
     name: Build and test
