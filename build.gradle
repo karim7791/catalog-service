@@ -59,3 +59,18 @@ tasks.named('test') {
 bootRun {
 	systemProperty 'spring.profiles.active', 'testData'
 }
+
+bootBuildImage {
+	builder = 'paketobuildpacks/builder-jammy-java-tiny'
+	imageName = "${project.name}"
+	environment = ["BP_JVM_VERSION": "17.*"]
+	imagePlatform = 'linux/arm64'
+
+	docker {
+		publishRegistry {
+			username = project.findProperty("registryUsername")
+			password = project.findProperty("registryToken")
+			url = project.findProperty("registryUrl")
+		}
+	}
+}
